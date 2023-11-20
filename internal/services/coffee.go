@@ -16,7 +16,9 @@ type Coffee struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
-
+type CoffeeList struct {
+    Coffees []Coffee `json:"coffees"`
+}
 func (c *Coffee) GetAllCofees() ([]*Coffee, error){
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()

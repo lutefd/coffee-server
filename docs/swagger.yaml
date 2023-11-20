@@ -1,0 +1,125 @@
+basePath: /api/v1
+definitions:
+  controllers.Message:
+    properties:
+      message:
+        type: string
+    type: object
+  services.Coffee:
+    properties:
+      created_at:
+        type: string
+      grind_unit:
+        type: integer
+      id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      region:
+        type: string
+      roast:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  services.CoffeeList:
+    properties:
+      coffees:
+        items:
+          $ref: '#/definitions/services.Coffee'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: This is a sample server for a coffee store.
+  title: Coffee API
+  version: "1"
+paths:
+  /coffees:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all coffee entries
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.CoffeeList'
+      summary: Get all coffees
+      tags:
+      - coffee
+    post:
+      consumes:
+      - application/json
+      description: Adds a new coffee entry to the list
+      parameters:
+      - description: Coffee Data
+        in: body
+        name: coffeeData
+        required: true
+        schema:
+          $ref: '#/definitions/services.Coffee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/services.Coffee'
+      summary: Create a coffee entry
+      tags:
+      - coffee
+  /coffees/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a coffee entry identified by ID
+      parameters:
+      - description: Coffee ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Message'
+      summary: Delete a coffee entry
+      tags:
+      - coffee
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing coffee entry identified by ID
+      parameters:
+      - description: Coffee ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Coffee Data
+        in: body
+        name: coffeeData
+        required: true
+        schema:
+          $ref: '#/definitions/services.Coffee'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.Coffee'
+      summary: Update a coffee entry
+      tags:
+      - coffee
+swagger: "2.0"

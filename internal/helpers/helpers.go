@@ -71,3 +71,4 @@ func ErrorJSON (w http.ResponseWriter, err error, status ...int){
 	WriteJSON(w, statusCode, payload, nil)
 	
 }
+

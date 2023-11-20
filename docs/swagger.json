@@ -1,0 +1,191 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server for a coffee store.",
+        "title": "Coffee API",
+        "contact": {},
+        "version": "1"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/coffees": {
+            "get": {
+                "description": "Retrieves a list of all coffee entries",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "coffee"
+                ],
+                "summary": "Get all coffees",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.CoffeeList"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Adds a new coffee entry to the list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "coffee"
+                ],
+                "summary": "Create a coffee entry",
+                "parameters": [
+                    {
+                        "description": "Coffee Data",
+                        "name": "coffeeData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.Coffee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/services.Coffee"
+                        }
+                    }
+                }
+            }
+        },
+        "/coffees/{id}": {
+            "put": {
+                "description": "Updates an existing coffee entry identified by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "coffee"
+                ],
+                "summary": "Update a coffee entry",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Coffee ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Coffee Data",
+                        "name": "coffeeData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.Coffee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.Coffee"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a coffee entry identified by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "coffee"
+                ],
+                "summary": "Delete a coffee entry",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Coffee ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Message"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.Message": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.Coffee": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "grind_unit": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "region": {
+                    "type": "string"
+                },
+                "roast": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.CoffeeList": {
+            "type": "object",
+            "properties": {
+                "coffees": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.Coffee"
+                    }
+                }
+            }
+        }
+    }
+}
