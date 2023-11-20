@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/lutefd/coffee-server/internal/database"
 	"github.com/lutefd/coffee-server/internal/server"
+	"github.com/lutefd/coffee-server/internal/services"
 )
 
 func main() {
@@ -29,7 +30,7 @@ func main() {
 	
 	app := server.Application{
 		Config: cfg,
-		//TODO: add models
+		Models: services.New(dbConn.DB),
 	}
 	err = app.Serve()
 	if err != nil {
