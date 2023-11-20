@@ -11,11 +11,8 @@ stop_containers:
 
 create_container:
 	@echo "Creating docker container"
-	@docker run -d -p 8080:8080 --name $(DB_DOCKER_CONTAINER) -p ${DB_PORT}:${DB_PORT} -e POSTGRES_USER=${USER} -e POSTGRES_PASSWORD=${PASSWORD} -e POSTGRES_DB=${DB_NAME} postgres:12-alpine
+	@docker compose up -d
 
-create_db:
-	@echo "Creating database"
-	@docker exec -it $(DB_DOCKER_CONTAINER) createdb --username ${USER} --owner=${USER} ${DB_NAME}
 
 start_containers:
 	@echo "Starting docker containers"
@@ -29,3 +26,19 @@ run_migrations:
 
 rollback_migrations:
 	sqlx migrate revert --database-url "postgres://${USER}:${PASSWORD}@${HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable"
+
+build:
+	if [ -f "${BINARY}" ]; then \
+		rm ${BINARY}; \
+		echo "Removed ${BINARY}"; \
+	fi
+	@echo "Building binary..." 
+	go build -o ${BINARY} cmd/api/main.go
+
+run: build
+	./${BINARY}
+
+stop: 
+	@echo "Stopping server"
+	@-pkill -SIGTERM -f "./${BINARY}"
+	@echo "server stopped"

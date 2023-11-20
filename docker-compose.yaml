@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:12-alpine
+    container_name: ${DB_DOCKER_CONTAINER}
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    volumes:
+      - coffee-db-container:/var/lib/postgresql/data
+
+volumes:
+  coffee-db-container:
