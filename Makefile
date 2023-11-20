@@ -11,7 +11,7 @@ stop_containers:
 
 create_container:
 	@echo "Creating docker container"
-	@docker run -d -p 8080:8080 --name $(DB_DOCKER_CONTAINER) -p 5432:5432 -e POSTGRES_USER=${USER} -e POSTGRES_PASSWORD=${PASSWORD} -e POSTGRES_DB=${DB_NAME} postgres:12-alpine
+	@docker run -d -p 8080:8080 --name $(DB_DOCKER_CONTAINER) -p ${DB_PORT}:${DB_PORT} -e POSTGRES_USER=${USER} -e POSTGRES_PASSWORD=${PASSWORD} -e POSTGRES_DB=${DB_NAME} postgres:12-alpine
 
 create_db:
 	@echo "Creating database"
@@ -22,4 +22,10 @@ start_containers:
 	@docker start $(DB_DOCKER_CONTAINER)
 
 create_migrations:
-	sqlx migrate -r init
+	sqlx migrate add init
+
+run_migrations:
+	sqlx migrate run --database-url "postgres://${USER}:${PASSWORD}@${HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable"
+
+rollback_migrations:
+	sqlx migrate revert --database-url "postgres://${USER}:${PASSWORD}@${HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable"
