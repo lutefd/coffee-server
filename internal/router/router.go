@@ -25,6 +25,10 @@ func Routes() http.Handler{
 		w.Write([]byte("Welcome to Coffee API"))
 	})
 	router.Get("/api/v1/coffees", controllers.GetAllCofees)
+	router.Get("/api/v1/coffees/{id}", controllers.GetCoffeeById)
 	router.Post("/api/v1/coffees/create", controllers.CreateCoffee)
+	router.Put("/api/v1/coffees/{id}", controllers.UpdateCoffee)
+	router.Delete("/api/v1/coffees/{id}", controllers.DeleteCoffee)
+
 	return router
 }

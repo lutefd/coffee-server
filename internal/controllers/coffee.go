@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/lutefd/coffee-server/internal/helpers"
 	"github.com/lutefd/coffee-server/internal/services"
 )
@@ -19,15 +20,14 @@ func GetAllCofees(w http.ResponseWriter, r *http.Request) {
 	helpers.WriteJSON(w, http.StatusOK, helpers.Envelop{"coffees": all}, nil)
 }
 
-func GetCoffeeById(w http.ResponseWriter, r *http.Request) (*services.Coffee, error){
-	id := r.URL.Query().Get("id")
+func GetCoffeeById(w http.ResponseWriter, r *http.Request){
+	id := chi.URLParam(r, "id")
 	c, err := coffee.GetCoffeeById(id)
 	if err != nil {
 		helpers.MessageLogs.ErrorLog.Println("Error getting coffee by id", err)
-		return nil, err
+		return
 	}
 	helpers.WriteJSON(w, http.StatusOK, helpers.Envelop{"coffee": c}, nil)
-	return c, nil
 }
 
 func CreateCoffee(w http.ResponseWriter, r *http.Request) {
@@ -42,5 +42,32 @@ func CreateCoffee(w http.ResponseWriter, r *http.Request) {
 		helpers.MessageLogs.ErrorLog.Println("Error creating coffee", err)
 		return 
 	}
-	helpers.WriteJSON(w, http.StatusOK, coffeeCreated, nil)
+	helpers.WriteJSON(w, http.StatusCreated, coffeeCreated, nil)
+}
+
+func UpdateCoffee(w http.ResponseWriter, r *http.Request) {
+	var coffeeData services.Coffee
+	id := chi.URLParam(r, "id")
+	err := json.NewDecoder(r.Body).Decode(&coffeeData)
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println("Error decoding coffee data", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	coffeeUpdated, err := coffee.UpdateCoffee(id, coffeeData)
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println("Error updating coffee", err)
+		return
+	}
+	helpers.WriteJSON(w, http.StatusOK, coffeeUpdated, nil)
+}
+
+func DeleteCoffee(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	err := coffee.DeleteCoffee(id)
+	if err != nil {
+		helpers.MessageLogs.ErrorLog.Println("Error deleting coffee", err)
+		return
+	}
+	helpers.WriteJSON(w, http.StatusOK, helpers.Envelop{"message": "Coffee deleted"}, nil)
 }
