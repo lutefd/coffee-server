@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/lutefd/coffee-server/internal/database"
 	"github.com/lutefd/coffee-server/internal/server"
 )
 
@@ -18,7 +19,14 @@ func main() {
 		Port: os.Getenv("PORT"),
 	}
 
-	//TODO: connect to database
+	dsn := os.Getenv("DSN")
+
+	dbConn, err := database.ConnectPostgresDB(dsn)
+	if err != nil {
+		log.Fatal("Cannot connect do database ", err)
+	}
+	defer dbConn.DB.Close()
+	
 	app := server.Application{
 		Config: cfg,
 		//TODO: add models
